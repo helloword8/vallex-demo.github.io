@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="generator" content="Hugo 0.88.1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="css/normalize.css">
+
+	<title>VALL-E X</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body data-new-gr-c-s-check-loaded="14.1091.0" data-gr-ext-installed="">
+
+<div class="container" >
+<header role="banner">
+</header>
+<main role="main">
+<article itemscope itemtype="https://schema.org/BlogPosting">
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<div class="text-center">
+	<h1>VALL-E X</h1>
+        <h3>Speak Foreign Languages with Your Own Voice: Cross-Lingual Neural Codec Language Model</h3>
+		[<a href="https://vallex-demo.github.io">Paper: Coming Soon</a>]
+		<!---
+		[<a href="https://arxiv.org/abs/2301.02111">Paper</a>]
+		-->
+        
+        <p class="fst-italic mb-0">
+          <br>
+            Ziqiang Zhang*, &nbsp Long Zhou*, &nbsp Chengyi Wang, &nbsp Sanyuan Chen, &nbsp Yu Wu, &nbsp Shujie Liu, &nbsp  <br>
+			Zhuo Chen, &nbsp Yanqing Liu, &nbsp Huaming Wang, &nbsp Jinyu Li, &nbsp Lei He, &nbsp Sheng Zhao, &nbsp Furu Wei 
+      <p></p>
+        </p>
+        <p><b>Microsoft</b></p>
+	</div>
+	<p>
+        <b>Abstract.</b> 
+		We propose a cross-lingual neural codec language model, VALL-E X, for cross-lingual speech synthesis. 
+		Specifically, we extend VALL-E~\citep{wang2023neural} and train a multi-lingual conditional codec language model to predict the acoustic token sequences of the target language speech by using both the source language speech and the target language text as prompts. 
+		VALL-E X inherits strong in-context learning capabilities and can be applied for zero-shot cross-lingual text-to-speech synthesis and  zero-shot speech-to-speech translation tasks. 
+		Experimental results show that it can generate high-quality speech in the target language via just one speech utterance in the source language as a prompt while preserving the unseen speaker's voice, emotion, and acoustic environment. Moreover, VALL-E X effectively alleviates the foreign accent problems, which can be controlled by a language ID.
+      </p>     
+	  <p>This page is for <b>research demonstration purposes</b> only.</p>
+
+	<p>
+	<b>Contents</b>
+      <ul>
+        <li><a href="#model-overview">Model Overview</a></li>
+        <li><a href="#xtts-samples">Zero-Shot Cross-Lingual Text to Speech</a></li>
+        <li><a href="#s2st-samples">Zero-Shot Speech-to-Speech Translation</a></li>
+        <li><a href="#lid-samples">Foreign Accent Control</a></li>
+        <li><a href="#emotion-samples">Voice Emotion Maintenance</a></li>
+		<li><a href="#codeswitch-samples">Code-Switch Speech Synthesis</a></li>
+        <!-- <li><a href="#more-samples">More Examples</a></li> -->
+        <li><a href="#Ethics-Statement">Ethics Statement</a></li>
+      </ul>
+	</p>   
+
+</div>
+
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="model-overview" style="text-align: center;">Model Overview</h2>
+	<body>
+	<p style="text-align: center;">
+		<img src="pics/vallex_framework.jpg" height="400" width="800">
+	</p>
+	</body>
+		<p>
+			<b>Figure.</b> 
+			The overall framework of VALL-E X, which can synthesize personalized speech in another language for a monolingual speaker. Taking the phoneme sequences derived from the source and target text, and the source acoustic tokens derived from an audio codec model as prompts, VALL-E X is able to produce the acoustic tokens in the target language, which can be then decompressed to the target speech waveform. Thanks to its powerful in-context learning capabilities, VALL-E X does not require cross-lingual speech data of the same speakers for training, and can perform various zero-shot cross-lingual speech generation tasks, such as cross-lingual text-to-speech synthesis and speech-to-speech translation.
+		</p>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<h2 id="xtts-samples" style="text-align: center;">Zero-Shot Cross-Lingual Text to Speech</h2>
+
+		<div class="table-responsive pt-3">
+			<p>
+			<b>1) English TTS with Chinese prompts </b> (English samples are from LibriSpeech, Chinese samples are from EMIME and AISHELL-3 dataset).
+			</p>
+			<table class="table table-hover pt-2">
+				<thead>
+				<tr>
+				<th style="text-align: center">English Text</th>
+				<th style="text-align: center">Chinese Speaker Prompt</th>
+				<th style="text-align: center">Baseline</th>
+				<th style="text-align: center">VALL-E X</th>
+				</tr>
+				</thead>
+				<tbody>
+					<!-- <tr><td style="text-align: left;vertical-align:middle;width: 600px">In setting out from strawberry valley by bearing off to the northwestward a few miles you may see.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_541_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>国家政策对于法定福利和补充福利已有相关上限规定。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_541_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>In setting out from strawberry valley by bearing off to the northwestward a few miles you may see.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_541_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio> <p>In setting out from strawberry valley by bearing off to the northwestward a few miles you may see.</p> </td>
+					</tr>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">Grant was only a few miles away, but although commander in chief, he knew nothing of the hardest fought battle of the civil war until it was over.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_1203_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>而2013年仅为1.3亿美元</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_1203_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>Grant was only a few miles away, but although commander in chief, he knew nothing of the hardest fought battle of the civil war until it was over.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_1203_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>Grant was only a few miles away, but although commander in chief, he knew nothing of the hardest fought battle of the civil war until it was over.</p></td>
+					</tr> -->
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">Look a little closer while our guide lets the light of his lamp fall upon the black wall at your side.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_518_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>冰雪运动是体育场业的重要组成部分。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_518_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>Look a little closer while our guide lets the light of his lamp fall upon the black wall at your side.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_518_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>Look a little closer while our guide lets the light of his lamp fall upon the black wall at your side.</p></td>
+					</tr>
+					<!-- <tr><td style="text-align: left;vertical-align:middle;width: 600px">According to all appearance industrious manipulators of children had worked upon his face.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_832_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们拒绝这项社会不认可的改革。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_832_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>According to all appearance industrious manipulators of children had worked upon his face.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_832_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>According to all appearance industrious manipulators of children had worked upon his face.</p></td> -->
+				
+					</tr>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">He honours whatever he recognizes in himself, such morality equals self-glorification.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_729_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>立法已经到位，以便达成这些目标。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_729_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>He honours whatever he recognizes in himself, such morality equals self-glorification.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_729_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>He honours whatever he recognizes in himself, such morality equals self-glorification.</p></td>
+					</tr>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">One dark night at the head of a score of his tribe, he fell upon Wabigoon's camp, his object being the abduction of the princess.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_905_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>我相信你在那里涉及到了某个要点。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_905_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>One dark night at the head of a score of his tribe, he fell upon Wabigoon's camp, his object being the abduction of the princess.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_905_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>One dark night at the head of a score of his tribe, he fell upon Wabigoon's camp, his object being the abduction of the princess.</p></td>
+					</tr>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">There could be little art in this last and final round of fencing.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_34_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>而未来复兴国际对保险公司的收购也显得野心勃勃。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_34_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>There could be little art in this last and final round of fencing.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_34_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>There could be little art in this last and final round of fencing.</p></td>
+					</tr>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">It's the first time Hilda has been to our house and Tom introduces her around.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_205_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>土地开发投资已17亿美元跟随其后。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_205_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>It's the first time Hilda has been to our house and Tom introduces her around.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-aishellprompts-libriltext/ziq_selected_Ar01LidEn/aishell2libri_205_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>It's the first time Hilda has been to our house and Tom introduces her around.</p></td>
+					</tr>
+					</tr>
+					<tr><td style="text-align: left;vertical-align:middle;width: 600px">It was youth and poverty and proximity and everything was young and kindly.</td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_60_ch_prompts.wav" autoplay/>Your browser does not support the audio element.</audio><p>摩洛哥农业在向欧洲出口时享受特殊待遇。</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_60_en_baseline.wav" autoplay/>Your browser does not support the audio element.</audio><p>It was youth and poverty and proximity and everything was young and kindly.</p></td>
+					<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-emimeprompts-libriltext/ziq_selected_Ar01LidEn/emime2libri_60_en_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>It was youth and poverty and proximity and everything was young and kindly.</p></td>
+					</tr>	
+				</tbody>
+			</table>
+			<br>
+			<p>
+			<b>2) Chinese TTS with English prompts </b> (Chinese samples are from EMIME and AISHELL-3 test, English samples are from LibriSpeech).
+			</p>	
+			<table class="table table-hover pt-2">
+			
+			<thead>
+			<tr>
+			<th style="text-align: center">Chinese Text</th>
+			<th style="text-align: center">English Speaker Prompt</th>
+			<th style="text-align: center">VALL-E X</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">坚持房地产调控政策不动摇。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/ref_output_238_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>One day, when I rode over to the Shemeridas, I found Antonia starting off on foot for a Russian Peters house to borrow a spade and brooch needed.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/output_238_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>坚持房地产调控政策不动摇。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">值得关注的是从二零一零年到二零一四年。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/ref_output_576_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>Well, well, that's honest at all events.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/output_576_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>值得关注的是从二零一零年到二零一四年。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">两千六百四十八万二千五百四十六。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/ref_output_590_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>Our scandalous proceedings often exposed us to the greatest danger.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/output_590_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>两千六百四十八万二千五百四十六。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">汇聚部分全球领先品牌的下一代技术创新。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/ref_output_591_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>We would very often spend the whole night rambling about the city, inventing and carrying into execution the most impertinent practical jokes.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/output_591_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>汇聚部分全球领先品牌的下一代技术创新。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">商品房销售情况也传递出了更多暖意。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/ref_output_610_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>Your apartment is ready. You may send your clothes. You shall have a servant, a gondola at your orders. My own table and 10 sequins a month.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/output_610_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>商品房销售情况也传递出了更多暖意。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 500px">最低首付款比例为百分之一。</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/ref_output_1243_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>And as soon as their parents had gone to sleep, he got up, put on his coat, and unbarring the back door went out.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/xtts/xtts-libriprompts-aishelltext/output_1243_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>最低首付款比例为百分之一。</p></td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<h2 id="s2st-samples" style="text-align: center;">Zero-Shot Speech-to-Speech Translation</h2>
+
+		<div class="table-responsive pt-3">
+			<p>
+			<b>1) Chinese to English Translation on EMIME dataset.</b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">Chinese Speech</th>
+				<th style="text-align: center">English Ground Truth</th>
+				<th style="text-align: center">Baseline</th>
+				<th style="text-align: center">VALL-E X Trans</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_50.wav" autoplay/>Your browser does not support the audio element.</audio><p>摩洛哥农业在向欧洲出口时享受特殊待遇。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_50.wav" autoplay/>Your browser does not support the audio element.</audio><p>Moroccan agriculture enjoys special treatment when exporting to Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_50.wav" autoplay/>Your browser does not support the audio element.</audio><p>Moroccan agriculture gets special treatment when exporting to Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_50.wav" autoplay/>Your browser does not support the audio element.</audio><p>Moroccan agriculture enjoys special treatment when exporting to Europe.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_135.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们拒绝这项社会不认可的改革。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_135.wav" autoplay/>Your browser does not support the audio element.</audio><p>We reject this socially unacceptable reform.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_135.wav" autoplay/>Your browser does not support the audio element.</audio><p>We reject this socially unacceptable reform.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_135.wav" autoplay/>Your browser does not support the audio element.</audio><p>We reject this socially unacceptable reform.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_234.wav" autoplay/>Your browser does not support the audio element.</audio><p>立法已经到位，以便达成这些目标。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_234.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is already in place to achieve these aims.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_234.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is in place to achieve these goals.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_234.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is in place to achieve these goals.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_150.wav" autoplay/>Your browser does not support the audio element.</audio><p>摩洛哥农业在向欧洲出口时享受特殊待遇。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_150.wav" autoplay/>Your browser does not support the audio element.</audio><p>Moroccan agriculture enjoys special treatment when exporting to Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_150.wav" autoplay/>Your browser does not support the audio element.</audio><p>Moroccan agriculture gets special treatment when exporting to Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_150.wav" autoplay/>Your browser does not support the audio element.</audio><p>Moroccan agriculture enjoys special treatment when exporting to Europe.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表着欧洲民众。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>This Parliament represents the people of Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>This Parliament represents the people of Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>This Parliament represents the people of Europe.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/source/zh_9.wav" autoplay/>Your browser does not support the audio element.</audio><p>立法已经到位，以便达成这些目标。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/target/en_9.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is already in place to achieve these aims.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/baseline/baseline_9.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is in place to achieve these goals.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/zh-en-translation/ours/vallex_9.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is in place to achieve these goals.</p></td>
+			</tr>
+			</tbody>
+			</table>
+			<br>
+			<p>
+			<b>2) English to Chinese Translation on EMIME dataset.</b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">English Speech</th>
+				<th style="text-align: center">Chinese Ground Truth</th>
+				<th style="text-align: center">VALL-E X Trans</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_204.wav" autoplay/>Your browser does not support the audio element.</audio><p>In reality, the European Parliament is practising delay tactics.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_204.wav" autoplay/>Your browser does not support the audio element.</audio><p>实际上，欧洲议会正在施展拖延战术。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_204.wav" autoplay/>Your browser does not support the audio element.</audio><p>事实上，欧洲议会正在实施拖延战术。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_98.wav" autoplay/>Your browser does not support the audio element.</audio><p>We support the internal economic market.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_98.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们支持国内经济市场。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_98.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们支持内部经济市场。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_137.wav" autoplay/>Your browser does not support the audio element.</audio><p>There are many examples of this in France.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_137.wav" autoplay/>Your browser does not support the audio element.</audio><p>在法国有许多这样的例子。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_137.wav" autoplay/>Your browser does not support the audio element.</audio><p>法国有许多这样的例子。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_209.wav" autoplay/>Your browser does not support the audio element.</audio><p>Legislation is already in place to achieve these aims.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_209.wav" autoplay/>Your browser does not support the audio element.</audio><p>立法已经到位，以便达成这些目标。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_209.wav" autoplay/>Your browser does not support the audio element.</audio><p>立法已经到位，以实现这些目标。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_148.wav" autoplay/>Your browser does not support the audio element.</audio><p>We support the internal economic market.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_148.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们支持国内经济市场。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_148.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们支持内部经济市场。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/source/en_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>This Parliament represents the people of Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/target/zh_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表着欧洲民众。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/en-zh-translation/ours/vallex_168.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表欧洲人民。</p></td>
+			</tr>
+			</tbody>
+			</table>
+			<br>
+			<p>
+			<b>3) Chinese to English Translation using AISHELL-3 test.</b>
+			</p>
+			<table class="table table-hover pt-2">
+				<thead>
+				<tr>
+				<th style="text-align: center">Chinese Text</th>
+				<th style="text-align: center">Chinese Speech</th>
+				<th style="text-align: center">Baseline</th>
+				<th style="text-align: center">VALL-E X Trans </th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr><td style="text-align: left;vertical-align:middle;width: 500px">我们就坐在他的位于半山坡的办公室里。</td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav/output_103_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们就坐在他的位于半山坡的办公室里。</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB07170458.104.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio><p>We were sitting in his office in Payne-Shane Boat</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav_lid2/aishell_zh2en_103_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>We were sitting in his office on the hillside.</p></td>
+			</tr>
+				<tr><td style="text-align: left;vertical-align:middle;width: 500px">是巴西女选手在热身泳道中违规使用脚扑影响他人。</td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav/output_140_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>是巴西女选手在热身泳道中违规使用脚扑影响他人。</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB17450167.141.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio><p> It's a Brazilian woman who used her foot to intrude in the warm-up.</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav_lid2/aishell_zh2en_140_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>It was the Brazilian female contestants who eagerly used their feet in the warm-up passage to influence others.</p></td>
+			</tr>
+				<tr><td style="text-align: left;vertical-align:middle;width: 500px">更在于这项运动本身具有着极其丰富的精神内涵。</td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav/output_151_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>更在于这项运动本身具有着极其丰富的精神内涵。</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB08870390.152.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio><p>The sport itself has a very rich spiritual content.</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav_lid2/aishell_zh2en_151_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>It's also that the sport itself is a very rich spiritual connotation.</p></td>
+			</tr>
+				<tr><td style="text-align: left;vertical-align:middle;width: 500px">美国并没有统一的全国高中联赛。</td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav/output_3_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>美国并没有统一的全国高中联赛。</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB06930182.4.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio><p>The United States does not have a unified national high school league.</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav_lid2/aishell_zh2en_3_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>The U.S. doesn't have a unified National High School League.</p></td>
+				</tr>
+				<tr><td style="text-align: left;vertical-align:middle;width: 500px">本市还要打造慈善捐赠事业的阳光工程。</td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav/output_12_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>本市还要打造慈善捐赠事业的阳光工程。</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB11870416.13.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio><p>This city also wants to create a charity project for the sun.</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav_lid2/aishell_zh2en_12_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>The city is also building a Sunshine Project for charity donations.</p></td>
+			</tr>
+				<tr><td style="text-align: left;vertical-align:middle;width: 500px">达茜兮会称呼我为瓦齐里先生。</td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav/output_59_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>达茜兮会称呼我为瓦齐里先生。</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/baseline/SSB07170279.60.yourtts.wav" autoplay/>Your browser does not support the audio element.</audio><p>Haitians say it will call me Mr. Watkali.</p></td>
+				<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-aishell3-zhen/ziq_selected_wav_lid2/aishell_zh2en_59_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>Darcy will call me Mr. Visily.</p></td>
+			</tr>
+				</tbody>
+
+			</table>
+			<br>
+			<p>
+			<b>4) English to Chinese Translation using LibriSpeech dev-clean.</b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+			<th style="text-align: center">English Text</th>
+			<th style="text-align: center">English Speech</th>
+			<th style="text-align: center">VALL-E X Trans</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">His instant of panic was followed by a small sharp blow high on his chest.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_22_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>His instant of panic was followed by a small sharp blow high on his chest.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_22_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>他的恐慌瞬间之后是胸部的一个小小的剧烈打击。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">The last two days of the voyage, Bartley found almost intolerable.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_61_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>The last two days of the voyage, Bartley found almost intolerable.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_61_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>航行的最后两天，巴特利发现几乎无法忍受。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">She merely brushed his cheek with her lips and put a hand lightly and joyously on either shoulder.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_65_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>She merely brushed his cheek with her lips and put a hand lightly and joyously on either shoulder.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_65_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>他只是用嘴唇扶过他的脸颊轻轻的快乐地把手放在两个肩膀上。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">But in this awful moment of the danger of the church. their vow was superseded by a more sublime and indispensable duty.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_105_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>But in this awful moment of the danger of the church. their vow was superseded by a more sublime and indispensable duty.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_105_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>但是在教会危险的这个可怕时刻，他们的誓言被一个更崇高和不可或缺的职责所取代。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">We've lost the key of the cellar and there's nothing out except water and I don't think you'd care for that.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_425_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>We've lost the key of the cellar and there's nothing out except water and I don't think you'd care for that.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_425_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们丢了地窖的钥匙,除了水什么都没有，我想你不会在乎的。</p></td>
+			</tr>
+			<tr><td style="text-align: left;vertical-align:middle;width: 600px">He had been late. He had offered no excuse no explanation.</td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_1058_reference.wav" autoplay/>Your browser does not support the audio element.</audio><p>He had been late. He had offered no excuse no explanation.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/s2st/s2st-libridev-enzh/ziq_selected_wav/output_1058_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>他迟到了，他没有提供任何借口，没有解释。</p></td>
+			</tr>
+
+			</tbody>
+			</table>
+		</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+	<h2 id="lid-samples" style="text-align: center;">Foreign Accent Control</h2>
+		<div class="table-responsive pt-3">
+			<p>
+			<b>1) English to Chinese on EMIME dataset. </b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">English Speech (Prompt)</th>
+				<th style="text-align: center">Chinese Speech (Ground Truth)</th>
+				<th style="text-align: center">VALL-E X with English LID</th>
+				<th style="text-align: center">VALL-E X with Chinese LID</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en_43_truth.wav" autoplay/>Your browser does not support the audio element.</audio><p>This Parliament represents the people of Europe.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_zh_43_truth.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表着欧洲民众。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en2zh_43_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表着欧洲民众。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en2zh_43_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表着欧洲民众。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en-zh-translation/MF1_ENG_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio><p>The problems I mentioned are not insurmountable.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en-zh-translation/MF1_MAN_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio><p>我提到的这个问题并不难处理。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en-zh-translation/output_with_EN_LID_MF1_ENG_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio><p>我提到的这个问题并不难处理。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en-zh-translation/output_with_ZH_LID_MF1_ENG_0002_1.wav" autoplay/>Your browser does not support the audio element.</audio><p>我提到的这个问题并不难处理。</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en_252_truth.wav" autoplay/>Your browser does not support the audio element.</audio><p>The various reports reflect this mainstream attitude.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_zh_252_truth.wav" autoplay/>Your browser does not support the audio element.</audio><p>各项报导反映出这种主流态度。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en2zh_252_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>各项报导反映出这种主流态度。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en2zh_252_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>各项报导反映出这种主流态度。</p></td>
+			</tr>
+
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en_266_truth.wav" autoplay/>Your browser does not support the audio element.</audio><p>I believe you touched on an important point there.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_zh_266_truth.wav" autoplay/>Your browser does not support the audio element.</audio><p>我相信你在那里涉及到了某个要点。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en2zh_266_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>我相信你在那里涉及到了某个要点。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/en2zh_s2st_GTtext/selected_accent/emime_en2zh_266_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>我相信你在那里涉及到了某个要点。</p></td>
+			</tr>
+
+			</tbody>
+			</table>
+			<br>
+			<p>
+			<b>2) Chinese to English on EMIME dataset. </b>
+			</p>
+			<table class="table table-hover pt-2">
+			<thead>
+			<tr>
+				<th style="text-align: center">Chinese Speech (Prompt)</th>
+				<th style="text-align: center">English Speech (Ground Truth)</th>
+				<th style="text-align: center">VALL-E X with English LID</th>
+				<th style="text-align: center">VALL-E X with Chinese LID</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_236_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio><p>请允许我标记出一些观点。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_236_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio><p>Allow me to highlight a number of points.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_236_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>Allow me to highlight a number of points.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_236_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>Allow me to highlight a number of points.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_155_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio><p>不幸的是，其他人因为积怨分开。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_155_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio><p>Unfortunately, others separate on the basis of accumulated hatred.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_155_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>Unfortunately, others separate on the basis of accumulated hatred.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_155_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>Unfortunately, others separate on the basis of accumulated hatred.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_123_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们支持国内经济市场。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_123_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio><p>We support the internal economic market.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_123_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>We support the internal economic market.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_123_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>We support the internal economic market.</p></td>
+			</tr>
+			<tr>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_262_truth_zh.wav" autoplay/>Your browser does not support the audio element.</audio><p>在法国有许多这样的例子。</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_262_truth_en.wav" autoplay/>Your browser does not support the audio element.</audio><p>There are many examples of this in France.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_262_ar01lid2.wav" autoplay/>Your browser does not support the audio element.</audio><p>There are many examples of this in France.</p></td>
+			<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/LID/zh2en_s2st_GTtext/selected_accent/emime_zh2en_262_ar01lid1.wav" autoplay/>Your browser does not support the audio element.</audio><p>There are many examples of this in France.</p></td>
+			</tr>
+
+			</tbody>
+			</table>
+		</div>
+</div>
+
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="emotion-samples" style="text-align: center;"> Voice Emotion Maintenance </h2>
+		<p> 
+		VALL-E X Trans can synthesize personalized target speech while maintaining the emotion in the source speech. The source audio are sampled from the Emotional Voices Database EmoV-DB.
+		</p>
+	<div class="table-responsive pt-3">
+		<table class="table table-hover pt-2">
+		<thead>
+		<tr>
+		<th style="text-align: center">Emotion</th>
+		<th style="text-align: center">English Speech</th>
+		<th style="text-align: center">VALL-E X Trans</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Neutral</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_4162_neutral_85-112_0097.wav" autoplay/>Your browser does not support the audio element.</audio><p>Then you can arrange yourself comfortably among these robes in the bow.</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_4162_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>然后你可以在传统的这些长袍中舒适地安排自己。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Amused</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_3872_amused_85-112_0110.wav" autoplay/>Your browser does not support the audio element.</audio><p>Much, replied Jeanne, as tersely.</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_3872_28_2_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>很多，珍妮简介地回答。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Sleepiness</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_1455_sleepiness_253-280_0253.wav" autoplay/>Your browser does not support the audio element.</audio><p>He was that lived to found the family of the Patino.</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_1455_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>他活着是为了建立帕德诺家族。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Anger</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5249_anger_367-392_0368.wav" autoplay/>Your browser does not support the audio element.</audio><p>I just do appreciate it without being able to express my feelings.</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5249_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>我只是很感激,你没有能够表达我的感受。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">Disgust</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5712_disgust_336-364_0364.wav" autoplay/>Your browser does not support the audio element.</audio><p>We have plenty of capital ourselves, and yet we want more.</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/emotion/output_5712_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们自己有足够的资本,但我们想要更多。</p></td>
+		</tr>
+		</tbody>
+		</table>	
+	</div>
+</div>
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="codeswitch-samples" style="text-align: center;"> Code-Switch Speech Synthesis </h2>
+	<div class="table-responsive pt-3">
+		<table class="table table-hover pt-2">
+		<thead>
+		<tr>
+		<th style="text-align: center">Code-Switch Text</th>
+		<th style="text-align: center">Prompts</th>
+		<th style="text-align: center">VALL-E X</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">播放歌曲 BEST FRIEND。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/12_MF3_MAN_0010_0.wav" autoplay/>Your browser does not support the audio element.</audio><p>立法已经到位，以便达成这些目标。</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_12_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>播放歌曲 BEST FRIEND。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">我想去travel一下，放松一下自己。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/25_MM5_MAN_0003_0.wav" autoplay/>Your browser does not support the audio element.</audio><p>各项报导反映出这种主流态度。</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_25_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>我想去travel一下，放松一下自己。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">他是一个funny的人，总是讲笑话。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/26_MM5_MAN_0024_0.wav" autoplay/>Your browser does not support the audio element.</audio><p>我们支持国内经济市场。</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_26_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>他是一个funny的人，总是讲笑话。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">这个restaurant很有名，很多人都来吃。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/17_MM1_MAN_0003_0.wav" autoplay/>Your browser does not support the audio element.</audio><p>各项报导反映出这种主流态度。</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_17_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个restaurant很有名，很多人都来吃。</p></td>
+		</tr>
+		<tr>
+		<td style="text-align: center;vertical-align:middle;width: 500px">这个pizza很好吃，你要不要try一下。</td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/32_MM7_MAN_0019_0.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个议会代表着欧洲民众。</p></td>
+		<td style="text-align: center"><audio controls="controls" style="width: 140px;"><source src="audios/codeswitch/output_32_decompressed.wav" autoplay/>Your browser does not support the audio element.</audio><p>这个pizza很好吃，你要不要try一下。</p></td>
+		</tr>
+		</tbody>
+		</table>	
+	</div>
+</div>
+
+
+<div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+	<h2 id="Ethics-Statement" style="text-align: center;">Ethics Statement</h2>
+	<p>
+	Since VALL-E X could synthesize speech that maintains speaker identity, it may carry potential risks in misuse of the model, such as spoofing voice identification or impersonating a specific speaker. We conducted the experiments under the assumption that the user agree to be the target speaker in speech synthesis. If the model is generalized to unseen speakers in the real world, it should include a protocol to ensure that the speaker approves the use of their voice and a synthesized speech detection model.
+	</p>
+</div>
+ 
+</article>
+</main>
+</div>
+
+</body>
+</html>
